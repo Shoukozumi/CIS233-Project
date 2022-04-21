@@ -1,0 +1,4 @@
+# created by virtualenv automatically
+/.idea
+chromedriver
+.DS_STORE

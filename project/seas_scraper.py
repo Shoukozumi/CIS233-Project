@@ -19,7 +19,7 @@ WebDriverWait(driver, 30).until(ec.presence_of_element_located((By.ID, "main")))
 main = driver.find_element(By.XPATH, "/html/body/div[1]/div/div/main/div/div/div[3]/div[2]/div[2]/div/div")
 # xpath = "/html/body/div[1]/div/div/main/div/div/div[3]/div[2]/div[2]/div/div/div[1]"
 
-with open("nft_urls.csv", mode="w") as csv_file:
+with open("../data/nft_urls.csv", mode="w") as csv_file:
     driver.fullscreen_window()
 
     writer = csv.writer(csv_file)

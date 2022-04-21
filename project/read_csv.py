@@ -6,16 +6,16 @@ import csv
 
 
 if __name__ == "__main__":
-	urls_file = open("nft_urls.csv", mode="r")
+	urls_file = open("../data/nft_urls.csv", mode="r")
 	reader = list(csv.reader(urls_file))
-	if os.path.isfile("data.csv"):
-		start = len(list(csv.reader(open("data.csv", mode="r"))))
+	if os.path.isfile("../data/data.csv"):
+		start = len(list(csv.reader(open("../data/data.csv", mode="r"))))
 		mode = "a"
 	else:
 		start = 0
 		mode = "w"
 		exit()
-	with open("data.csv", mode=mode) as data_file:
+	with open("../data/data.csv", mode=mode) as data_file:
 		for i in range(start, len(reader) - 1):
 			link = reader[i][0]
 			print(f'link #{i}', link)

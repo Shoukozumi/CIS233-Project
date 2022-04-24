@@ -19,7 +19,7 @@ WebDriverWait(driver, 30).until(ec.presence_of_element_located((By.ID, "main")))
 main = driver.find_element(By.XPATH, "/html/body/div[1]/div/div/main/div/div/div[3]/div[2]/div[2]/div/div")
 # xpath = "/html/body/div[1]/div/div/main/div/div/div[3]/div[2]/div[2]/div/div/div[1]"
 
-with open("../data/nft_urls.csv", mode="w") as csv_file:
+with open("../data/nft_urls2.csv", mode="w") as csv_file:
     driver.fullscreen_window()
 
     writer = csv.writer(csv_file)
@@ -31,16 +31,23 @@ with open("../data/nft_urls.csv", mode="w") as csv_file:
             print(len(links))
 
         divs = main.find_elements(By.XPATH, 'div')
+        small_counter = 0
+        bug = False
         for div in divs:
             link = div.find_element(By.XPATH, "div/article/a").get_attribute("href")
 
             if link in links:
                 print(f'already found id: {counter}')
                 counter += 1
+                bug = True
             else:
                 links.add(link)
                 writer.writerow([link])
 
-        driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
+        if not bug or small_counter >= 5:
+            small_counter = 0
+            driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
+        else:
+            small_counter += 1
         # WebDriverWait(driver, 30).until(ec.visibility_of_element_located((By.ID, "main")))
         time.sleep(SCROLL_DELAY)

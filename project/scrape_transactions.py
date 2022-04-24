@@ -1,18 +1,19 @@
+import time
+
 from selenium import webdriver
 from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.wait import WebDriverWait
 from selenium.webdriver.support import expected_conditions as ec
 from webdriver_manager.chrome import ChromeDriverManager
-import time
 from selenium.common.exceptions import NoSuchElementException
+
 
 driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()))
 
 
 def get_time_from_etherscan(link):
     global driver
-
     original_window = driver.current_window_handle
     driver.switch_to.new_window('tab')
 
@@ -40,25 +41,25 @@ def parse_table(element):
     to_acc_link = to_element.get_attribute('href')
 
     etherscan_link = element.find_elements(By.CLASS_NAME, "EventTimestamp--link")[0].get_attribute('href')
-    time = get_time_from_etherscan(etherscan_link)
-    return price + ";" + from_acc + ";" + from_acc_link + ";" + to_acc + ";" + to_acc_link + ";" + time
+    ether_time = get_time_from_etherscan(etherscan_link)
+    return price + ";" + from_acc + ";" + from_acc_link + ";" + to_acc + ";" + to_acc_link + ";" + ether_time
 
 
-def check_exists_by_xpath(xpath, webElement=None):
+def check_exists_by_xpath(xpath, web_element=None):
     try:
-        if (webElement is None):
+        if not web_element:
             driver.find_element(By.XPATH, xpath)
         else:
-            webElement.find_element(By.XPATH, xpath)
+            web_element.find_element(By.XPATH, xpath)
 
     except NoSuchElementException:
         return False
     return True
 
 
-def check_exists_by_class(className):
+def check_exists_by_class(class_name):
     try:
-        driver.find_element(By.CLASS_NAME, className)
+        driver.find_element(By.CLASS_NAME, class_name)
     except NoSuchElementException:
         return False
     return True
@@ -66,6 +67,7 @@ def check_exists_by_class(className):
 
 def extract_from_link(link):
     global driver
+
     driver.get(link)
     # get name:
     xpath = "/html/body/div[1]/div/main/div/div/div/div[1]/div/div[1]/div[2]/section[1]/h1"
@@ -80,7 +82,6 @@ def extract_from_link(link):
         check_exists_by_xpath(xpath)) else 'None'
 
     # get all time average price:
-    # xpath = "/html/body/div[1]/div/main/div/div/div/div[1]/div/div[1]/div[2]/div[2]/div/div/div/div/div/div/div[1]/div[2]/div/div/div[2]"
     class_name = 'PriceHistoryStats--value'
     avg_price = driver.find_element(By.CLASS_NAME, class_name).get_attribute("innerText")[1:] if (
         check_exists_by_class(class_name)) else 'None'
@@ -91,8 +92,8 @@ def extract_from_link(link):
     xpath = "/html/body/div[1]/div/main/div/div/div/div[1]/div/div[1]/div[1]/section/div"
     panel = driver.find_element(By.XPATH, xpath)
     children_count = len(panel.find_elements(By.XPATH, './div'))
-    xpath = "/html/body/div[1]/div/main/div/div/div/div[1]/div/div[1]/div[1]/section/div/div[{}]/div/div/div/div/div".format(
-        children_count)
+    xpath = "/html/body/div[1]/div/main/div/div/div/div[1]/div/div[1]/div[1]/section/div/div[{}]/div/div/div/div/div" \
+        .format(children_count)
     details = panel.find_element(By.XPATH, xpath)
 
     contract_address = details.find_element(By.XPATH, "div[1]/span/a").get_attribute("href")
@@ -109,20 +110,21 @@ def extract_from_link(link):
 
     print(contract_address, contract_token_id, contract_token_standard, contract_blockchain)
     # remove all filters
-    while (check_exists_by_class('EventHistory--filter-pills')):
-        filter = driver.find_elements(By.CLASS_NAME, 'EventHistory--filter-pill')[0]
-        filter.click()
+    while check_exists_by_class('EventHistory--filter-pills'):
+        driver_filter = driver.find_elements(By.CLASS_NAME, 'EventHistory--filter-pill')[0]
+        driver_filter.click()
 
-    if (contract_blockchain != 'Ethereum'):
+    if contract_blockchain != 'Ethereum':
         return ''
 
     # get item activity:
     xpath = "/html/body/div[1]/div/main/div/div/div/div[1]/div/div[2]/div/div/div/div/div/div/div[1]/div/section/div"
     activity_filter = driver.find_element(By.XPATH, xpath)
     activity_filter.click()
-    xpath = "/html/body/div[1]/div/main/div/div/div/div[1]/div/div[2]/div/div/div/div/div/div/div[1]/div/section/ul/li[2]"  # CAREFUL: sometiems 2 and sometimes 4
+    xpath = "/html/body/div[1]/div/main/div/div/div/div[1]/div/div[2]/div/div/div/div/div/div/div[" \
+            "1]/div/section/ul/li[2]"  # CAREFUL: sometimes 2 and sometimes 4
     sale_filter = driver.find_element(By.XPATH, xpath)
-    sale_filter.click()  # unclick the transfer options
+    sale_filter.click()  # un-click the transfer options
 
     time.sleep(1)
 
@@ -135,8 +137,9 @@ def extract_from_link(link):
         txn_str += ',' + parse_table(all_txns[i])
 
     return (
-                name + ',' + owner + ',' + owner_link + ',' + avg_price + ',' + contract_address + ',' + contract_token_id + ',' + contract_token_standard +
-                ',' + contract_blockchain + ',' + txn_str)
+            link + ',' + name + ',' + owner + ',' + owner_link + ',' + avg_price + ',' + contract_address + ',' +
+            contract_token_id + ',' + contract_token_standard +
+            ',' + contract_blockchain + ',' + txn_str)
 
 
 if __name__ == "__main__":

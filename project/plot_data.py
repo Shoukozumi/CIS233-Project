@@ -3,7 +3,6 @@ import statistics
 import datetime
 import time
 import csv
-import sys
 
 '''
 Data we are interested in:
@@ -20,6 +19,9 @@ Histogram of trade profits
 
 plt.rcParams.update({'figure.figsize':(7,5), 'figure.dpi':100})
 COLLECTION_TIME = 1650829317.1939192
+
+def get_number_of_times_traded(data):
+    return [len(line[-1]) for line in data]
 
 def get_stats(data):
     print("STATS")
@@ -99,14 +101,15 @@ def box_and_histogram(data, title, xlabel, b=True):
     plt.show()
 
 if __name__ == "__main__":
-    data = cleanData()
-    for line in data:
+    clean_data = cleanData()
+    for line in clean_data:
         print(line)
 
-    prices = get_prices(data)
-    avg_time_deltas_per_nft = get_avg_time_deltas_per_trade(data)
-    avg_profits = get_avg_profits_per_trade(data)
-    times_since_last_traded = get_time_since_last_traded(data)
+    prices = get_prices(clean_data)
+    avg_time_deltas_per_nft = get_avg_time_deltas_per_trade(clean_data)
+    avg_profits = get_avg_profits_per_trade(clean_data)
+    times_since_last_traded = get_time_since_last_traded(clean_data)
+    number_of_times_traded = get_number_of_times_traded(clean_data)
 
     # box_and_histogram(times_since_last_traded, 'Frequencies of Time Since Last Traded', 'Time in Days', False)
     # box_and_histogram(prices, 'NFT Price Frequencies', 'NFT Price in ETH')
@@ -123,4 +126,10 @@ if __name__ == "__main__":
     plt.xlabel("Profit in ETH")
     plt.ylabel("Average time length between trades in days")
     plt.scatter(avg_profits, avg_time_deltas_per_nft)
+    plt.show()
+
+    plt.title("Number of transactions vs Price in ETH")
+    plt.xlabel("Number of transactions")
+    plt.ylabel("Prices in ETH")
+    plt.scatter(number_of_times_traded, prices)
     plt.show()

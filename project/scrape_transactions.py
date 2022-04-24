@@ -136,10 +136,12 @@ def extract_from_link(link):
     for i in range(1, len(all_txns)):
         txn_str += ',' + parse_table(all_txns[i])
 
-    return (
-            link + ',' + name + ',' + owner + ',' + owner_link + ',' + avg_price + ',' + contract_address + ',' +
-            contract_token_id + ',' + contract_token_standard +
-            ',' + contract_blockchain + ',' + txn_str)
+    # return (
+    #         link + ',' + name + ',' + owner + ',' + owner_link + ',' + avg_price + ',' + contract_address + ',' +
+    #         contract_token_id + ',' + contract_token_standard +
+    #         ',' + contract_blockchain + ',' + txn_str)
+    return [link, name, owner, owner_link, avg_price, contract_address, contract_token_id, contract_token_standard,
+            contract_blockchain, txn_str]
 
 
 if __name__ == "__main__":

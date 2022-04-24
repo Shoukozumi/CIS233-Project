@@ -38,6 +38,8 @@ def collect_data(csv_url, scroll_delay):
 
     # find new links
     with open(csv_url, mode=mode) as data_file:
+        writer = csv.writer(data_file)
+
         num_links = 0
         while True:
             try:
@@ -77,7 +79,8 @@ def collect_data(csv_url, scroll_delay):
                         print(f"error with url: {link}")
                     if s != '':
                         num_links += 1
-                        data_file.write(s + '\n')
+                        writer.writerow(s)
+                        # data_file.write(s + '\n')
 
             html = driver.find_element(By.TAG_NAME, 'html')
             html.send_keys(Keys.PAGE_DOWN)

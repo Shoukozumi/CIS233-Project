@@ -39,11 +39,7 @@ def collect_data(csv_url, scroll_delay):
     # find new links
     with open(csv_url, mode=mode) as data_file:
         num_links = 0
-        # original_window = driver.current_window_handle
-
         while True:
-            # link_found = False
-
             try:
                 divs = main.find_elements(By.XPATH, 'div')
             except Exception as e:
@@ -62,7 +58,7 @@ def collect_data(csv_url, scroll_delay):
                     print('already found id, error')
                 elif link:
                     links.add(link)
-                    if num_links % 50 == 0:
+                    if num_links % 10 == 0:
                         print(f"# of links collected: {num_links}")
 
                     # scrape link data
@@ -79,20 +75,13 @@ def collect_data(csv_url, scroll_delay):
 
                     if c == 10:
                         print(f"error with url: {link}")
-                        # link_found = True
                     if s != '':
                         num_links += 1
                         data_file.write(s + '\n')
-                        # link_found = True
 
-            # driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
-            # driver.switch_to.window(original_window)
-            # while driver.current_window_handle != original_window:
-            #     driver.close()
             html = driver.find_element(By.TAG_NAME, 'html')
             html.send_keys(Keys.PAGE_DOWN)
             print("scrolling...")
-            # driver.implicitly_wait(scroll_delay)
             time.sleep(scroll_delay)
 
 

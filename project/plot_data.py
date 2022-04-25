@@ -111,13 +111,9 @@ def log_regression(x, y, title, xlabel, ylabel):
     convy = []
     for p in d:
         d[p] = sorted(d[p])
-        ct = 0
-        for i in range(len(d[p]) - 1, -1, -1):
-            convx.append(p)
-            convy.append(d[p][i])
-            ct += 1
-            if (ct == 1):
-                break
+        convx.append(p)
+        convy.append(d[p][-1])
+        
     arr = numpy.polyfit(numpy.log(convx), convy, 1)
     def f(x):
         return arr[0] * numpy.log(x) + arr[1]
@@ -142,10 +138,54 @@ if __name__ == "__main__":
     times_since_last_traded = get_time_since_last_traded(clean_data)
     number_of_times_traded = get_number_of_times_traded(clean_data)
 
-    # box_and_histogram(times_since_last_traded, 'Frequencies of Time Since Last Traded', 'Time in Days', False)
-    # box_and_histogram(prices, 'NFT Price Frequencies', 'NFT Price in ETH')
-    # box_and_histogram(avg_time_deltas_per_nft, 'Time Delta Frequencies', 'Time Delta in Days')
-    # box_and_histogram(avg_profits, 'Trade Profit Frequencies', 'Profit in ETH')
+    box_and_histogram(times_since_last_traded, 'Frequencies of Time Since Last Traded', 'Time in Days', False)
+    '''
+    STATS
+    Min
+    0.005210577768308145
+    Max
+    7.32393742962016
+    Mean
+    0.33190967675346883
+    Median
+    0.22140849443497482
+    '''
+    box_and_histogram(prices, 'NFT Price Frequencies', 'NFT Price in ETH')
+    '''
+    STATS
+    Min
+    0.0
+    Max
+    119.925
+    Mean
+    0.6280066225165563
+    Median
+    0.148
+    '''
+    box_and_histogram(avg_time_deltas_per_nft, 'Time Delta Frequencies', 'Time Delta in Days')
+    '''
+    STATS
+    Min
+    0.0
+    Max
+    359.538125
+    Mean
+    23.81809047744309
+    Median
+    6.767210648148148
+    '''
+    box_and_histogram(avg_profits, 'Trade Profit Frequencies', 'Profit in ETH')
+    '''
+    STATS
+    Min
+    -15.655
+    Max
+    356.0
+    Mean
+    0.6197496556801528
+    Median
+    0.008391666666666669
+    '''
 
     # plt.title("Price of NFT vs Average length of time between trades")
     # plt.xlabel("Price in ETH")

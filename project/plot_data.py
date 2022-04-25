@@ -121,7 +121,7 @@ def log_regression(x, y, title, xlabel, ylabel):
     arr = numpy.polyfit(numpy.log(convx), convy, 1)
     def f(x):
         return arr[0] * numpy.log(x) + arr[1]
-    label = 'fit: y = ' + str(arr[0]) + 'log(x)+' + str(arr[1])
+    label = 'fit: y = ' + str(arr[0]) + 'log(x) + ' + str(arr[1])
     print("Equation: " + label)
     plt.plot(list(set(x)), f(list(set(x))), 'g--', color='red', label=label)
     plt.title(title)

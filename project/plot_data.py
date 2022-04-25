@@ -3,6 +3,8 @@ import statistics
 import datetime
 import time
 import csv
+from collections import defaultdict
+import numpy
 
 '''
 Data we are interested in:
@@ -100,6 +102,34 @@ def box_and_histogram(data, title, xlabel, b=True):
     plt.gca().set(title=title, xlabel=xlabel, ylabel='Frequency')
     plt.show()
 
+def log_regression(x, y, title, xlabel, ylabel):
+    d = defaultdict(list)
+    for i in range(len(x)):
+        d[x[i]].append(y[i])
+    
+    convx = []
+    convy = []
+    for p in d:
+        d[p] = sorted(d[p])
+        ct = 0
+        for i in range(len(d[p]) - 1, -1, -1):
+            convx.append(p)
+            convy.append(d[p][i])
+            ct += 1
+            if (ct == 1):
+                break
+    arr = numpy.polyfit(numpy.log(convx), convy, 1)
+    def f(x):
+        return arr[0] * numpy.log(x) + arr[1]
+    label = 'fit: y = ' + str(arr[0]) + 'log(x)+' + str(arr[1])
+    plt.plot(list(set(x)), f(list(set(x))), 'g--', color='red', label=label)
+    plt.title(title)
+    plt.xlabel(xlabel)
+    plt.ylabel(ylabel)
+    plt.scatter(x, y)
+    plt.legend(loc='best')
+    plt.show()
+
 if __name__ == "__main__":
     clean_data = cleanData()
     for line in clean_data:
@@ -116,20 +146,19 @@ if __name__ == "__main__":
     # box_and_histogram(avg_time_deltas_per_nft, 'Time Delta Frequencies', 'Time Delta in Days')
     # box_and_histogram(avg_profits, 'Trade Profit Frequencies', 'Profit in ETH')
 
-    plt.title("Price of NFT vs Average length of time between trades")
-    plt.xlabel("Price in ETH")
-    plt.ylabel("Average time length between trades in days")
-    plt.scatter(prices, avg_time_deltas_per_nft, )
-    plt.show()
+    # plt.title("Price of NFT vs Average length of time between trades")
+    # plt.xlabel("Price in ETH")
+    # plt.ylabel("Average time length between trades in days")
+    # plt.scatter(prices, avg_time_deltas_per_nft, )
+    # plt.show()
 
-    plt.title("Average Profit vs Average length of time between trades")
-    plt.xlabel("Profit in ETH")
-    plt.ylabel("Average time length between trades in days")
-    plt.scatter(avg_profits, avg_time_deltas_per_nft)
-    plt.show()
+    # plt.title("Average Profit vs Average length of time between trades")
+    # plt.xlabel("Profit in ETH")
+    # plt.ylabel("Average time length between trades in days")
+    # plt.scatter(avg_profits, avg_time_deltas_per_nft)
+    # plt.show()
 
-    plt.title("Number of transactions vs Price in ETH")
-    plt.xlabel("Number of transactions")
-    plt.ylabel("Prices in ETH")
-    plt.scatter(number_of_times_traded, prices)
-    plt.show()
+    log_regression(number_of_times_traded, prices, "Number of transactions vs Price in ETH", 
+        "Number of transactions", "Prices in ETH")
+    log_regression(number_of_times_traded, avg_time_deltas_per_nft, "Number of transactions vs Average time deltas between trades", 
+        "Number of transactions", "Average time lengths between trades in days")

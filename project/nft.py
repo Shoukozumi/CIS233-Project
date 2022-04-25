@@ -11,9 +11,6 @@ import time
 driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()))
 driver.get("https://opensea.io/assets/matic/0x71aacdb40a3cec7aa95674fa4dfdbbf5e28608aa/2981")
 
-# WebDriverWait(driver, 30).until(ec.presence_of_element_located((By.ID, "main")))
-# main = driver.find_element(By.XPATH, "/html/body/div[1]/div/div/main/div/div/div[3]/div[2]/div[2]/div/div")
-
 # get name:
 xpath = "/html/body/div[1]/div/main/div/div/div/div[1]/div/div[1]/div[2]/section[1]/h1"
 WebDriverWait(driver, 30).until(ec.presence_of_element_located((By.XPATH, xpath)))

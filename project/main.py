@@ -84,9 +84,10 @@ def collect_data(csv_url, scroll_delay):
 
             html = driver.find_element(By.TAG_NAME, 'html')
             html.send_keys(Keys.PAGE_DOWN)
+            html.send_keys(Keys.PAGE_DOWN)
             print("scrolling...")
             time.sleep(scroll_delay)
 
 
 if __name__ == "__main__":
-    collect_data("../data/new_data.csv", 10)
+    collect_data("../data/test_data.csv", 10)

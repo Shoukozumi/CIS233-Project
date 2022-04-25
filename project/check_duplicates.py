@@ -53,14 +53,9 @@ def check_duplicates(csv_url):
 
 
 if __name__ == "__main__":
-    old_url = "../data/new_data.csv"
-    new_url = "../data/new_data2.csv"
+    old_url = "../data/test_data.csv"
+    # new_url = "../data/new_data2.csv"
 
     num, rows = check_duplicates(old_url)
     print(num)
     print(rows)
-
-    # delete_duplicates(old_url, old_url, rows)
-    # num, rows = check_duplicates(old_url)
-    # print(num)
-    # print(rows)

@@ -36,4 +36,3 @@ if __name__ == "__main__":
 				data_file.write("Skipped\n")
 			else:
 				data_file.write(s + '\n')
-			# print(s)
